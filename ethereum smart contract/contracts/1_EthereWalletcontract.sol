@@ -1,29 +1,22 @@
-// SPDX-License-Identifier: GPL-3.0
+agma solidity >=0.7.0 <0.9.0;
 
-pragma solidity >=0.7.0 <0.9.0;
+contract Etherewallet {
+    address payable public owner;
 
-/**
- * @title Storage
- * @dev Store & retrieve value in a variable
- * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
- */
-contract Storage {
-
-    uint256 number;
-
-    /**
-     * @dev Store value in variable
-     * @param num value to store
-     */
-    function store(uint256 num) public {
-        number = num;
+    constructor() {
+        owner = payable(msg.sender);
     }
 
-    /**
-     * @dev Return value 
-     * @return value of 'number'
-     */
-    function retrieve() public view returns (uint256){
-        return number;
+    receive() external payable {}
+
+    function withdraw(uint _amount) external {
+        require(msg.sender == owner,"Only owner can call this function");
+        payable(msg.sender).transfer(_amount);
+    }
+    function  getBalance() external view  returns(uint){
+
+        return address(this).balance;
+
+
     }
 }
